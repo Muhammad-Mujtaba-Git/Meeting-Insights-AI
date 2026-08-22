@@ -1,0 +1,24 @@
+name: Docker CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - fixing-for-deploy
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Build Backend Image
+        run: docker build -t mi-backend-test -f Dockerfile.backend .
+
+      - name: Build Frontend Image
+        run: docker build -t mi-frontend-test -f Dockerfile.frontend .
