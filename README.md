@@ -13,7 +13,7 @@
 [![Groq](https://img.shields.io/badge/Groq-000000?logo=groq&logoColor=white)](https://groq.com/)
 [![ChromaDB](https://img.shields.io/badge/ChromaDB-FF6B6B?logo=chroma&logoColor=white)](https://www.trychroma.com/)
 [![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
-[![CI](https://github.com/INSERT_YOUR_GITHUB_URL/actions/workflows/docker-ci.yml/badge.svg)](https://github.com/INSERT_YOUR_GITHUB_URL/actions)
+[![Docker CI Pipeline](https://github.com/Muhammad-Mujtaba-Git/Meeting-Insights-AI/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/Muhammad-Mujtaba-Git/Meeting-Insights-AI/actions/workflows/ci-cd.yml)
 
 **[Live Frontend](https://INSERT_YOUR_FRONTEND_URL)** · **[Backend API](https://INSERT_YOUR_BACKEND_URL)** · **[API Docs](https://INSERT_YOUR_BACKEND_URL/docs)**
 
