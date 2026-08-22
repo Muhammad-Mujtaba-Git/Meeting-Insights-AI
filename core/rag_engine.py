@@ -1,5 +1,5 @@
 import os
-from langchain_ollama import ChatOllama
+from langchain_groq import ChatGroq
 from config import settings
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
@@ -10,7 +10,7 @@ from prompts.prompts import rag_chain_prompt
 
 class RAGEngine:
     def __init__(self):
-        self.llm = ChatOllama(model="llama3.1:8b", temperature=0.3)
+        self.llm = ChatGroq(model="qwen/qwen3.6-27b", temperature=0.3,api_key=settings.GROQ_API_KEY)
         
         
         self.vs = VectorStore() 

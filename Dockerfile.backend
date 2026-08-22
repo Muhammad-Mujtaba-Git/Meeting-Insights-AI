@@ -1,0 +1,39 @@
+
+FROM python:3.11-slim AS backend
+
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ffmpeg \
+    git \
+    curl \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# ---- Python deps ----
+COPY requirements_backend.txt .
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements_backend.txt
+
+# ---- App code ----
+COPY . .
+
+# ---- Directories ----
+RUN mkdir -p /app/download /app/chunks /app/uploads /app/vector_db
+
+ENV PYTHONPATH=/app
+
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -1,5 +1,6 @@
-from langchain_ollama import ChatOllama
+from langchain_groq import ChatGroq
 from config import settings
+import os
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_experimental.text_splitter import SemanticChunker
@@ -14,11 +15,11 @@ class TranscriptSummarizer:
     
     def __init__(self):
         """Initializes the LLM, Embeddings, and Semantic Chunker."""
-        self.llm = ChatOllama(model="llama3.1:8b", temperature=0.3)
+        self.llm = ChatGroq(model="qwen/qwen3.6-27b", temperature=0.0,api_key=settings.GROQ_API_KEY)
         
         self.embeddings = HuggingFaceEmbeddings(
             model_name="BAAI/bge-large-en-v1.5",
-            model_kwargs={'device': 'cuda'}, 
+            model_kwargs={'device': 'cpu'}, 
             encode_kwargs={'normalize_embeddings': True} 
         )
         

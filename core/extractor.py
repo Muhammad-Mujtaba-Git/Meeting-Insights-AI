@@ -1,4 +1,4 @@
-from langchain_ollama import ChatOllama
+from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
@@ -12,11 +12,11 @@ from prompts.prompts import (
 class TranscriptPointsExtract:
     """Service class for extracting structured insights from meeting transcripts."""
 
-    def __init__(self, model: str = "llama3.1:8b", temperature: float = 0.3):
+    def __init__(self, model: str = "qwen/qwen3.6-27b", temperature: float = 0.3):
         """
         Initializes the LLM.
         """
-        self.llm = ChatOllama(model=model, temperature=temperature)
+        self.llm = ChatGroq(model=model, temperature=temperature)
 
     def _build_chain(self, system_prompt: str):
         """

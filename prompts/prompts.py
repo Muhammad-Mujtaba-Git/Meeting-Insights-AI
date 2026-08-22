@@ -20,7 +20,7 @@ If the answer is not found in the context, say:
 
 Always be concise and precise. If quoting someone, mention it clearly.
 
-Context from meeting transcript:
+Context from meeting transcrip And start giving the answer and do not say according to the transcript or something like that:
 {context}"""
 
 

@@ -1,19 +1,15 @@
-# UI
-streamlit>=1.35.0
+
 
 # Audio Processing & Transcription
-faster-whisper
-torch>=2.2.0
-torchaudio>=2.2.0
+
 yt-dlp>=2024.3.10
 pydub
 
 # LangChain & LLM (Mistral)
 langchain>=0.2.0
+langchain-groq
 langchain-core>=0.2.0
 langchain-community>=0.2.0
-langchain-mistralai>=0.1.0
-mistralai>=0.1.8
 langchain-experimental
 
 # RAG & Vector Database (ChromaDB + HuggingFace)
@@ -22,11 +18,6 @@ langchain-chroma
 langchain-huggingface>=0.0.3
 sentence-transformers>=3.0.1
 
-# Cuda Support
-nvidia-cublas-cu12
-nvidia-cudnn-cu12>=9,<10
-
-ctranslate2==3.24.0
 
 
 # Export (PDF Generation)
