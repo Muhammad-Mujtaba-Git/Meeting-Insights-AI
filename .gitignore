@@ -3,3 +3,6 @@ __pycache__
 __pycache__/
 *.py[cod]
 *$py.class
+vector_db/
+*.sqlite3
+*.bin
