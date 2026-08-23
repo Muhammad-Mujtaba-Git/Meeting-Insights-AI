@@ -16,7 +16,7 @@ langchain-experimental
 chromadb>=0.5.0
 langchain-chroma
 langchain-huggingface>=0.0.3
-sentence-transformers>=3.0.1
+huggingface-hub>=0.23.0
 
 
 

@@ -2,8 +2,10 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     GROQ_API_KEY: str
+    HUGGINGFACEHUB_API_TOKEN : str
     LANGFUSE_SECRET_KEY: str
     LANGFUSE_PUBLIC_KEY: str
+    
     
  
     LANGFUSE_HOST: str = "https://cloud.langfuse.com"

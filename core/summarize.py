@@ -4,7 +4,7 @@ import os
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_experimental.text_splitter import SemanticChunker
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEndpointEmbeddings
 
 
 class TranscriptSummarizer:
@@ -17,11 +17,11 @@ class TranscriptSummarizer:
         """Initializes the LLM, Embeddings, and Semantic Chunker."""
         self.llm = ChatGroq(model="qwen/qwen3.6-27b", temperature=0.0,api_key=settings.GROQ_API_KEY)
         
-        self.embeddings = HuggingFaceEmbeddings(
-            model_name="BAAI/bge-large-en-v1.5",
-            model_kwargs={'device': 'cpu'}, 
-            encode_kwargs={'normalize_embeddings': True} 
-        )
+        self.embeddings = HuggingFaceEndpointEmbeddings(
+        model="BAAI/bge-large-en-v1.5",
+        task="feature-extraction",
+        huggingfacehub_api_token=settings.HUGGINGFACEHUB_API_TOKEN
+)
         
         self.splitter = SemanticChunker(
             self.embeddings, 
