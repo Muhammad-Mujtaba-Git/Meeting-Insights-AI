@@ -37,7 +37,7 @@ APP_SUB = (
     "Turn any meeting recording into actionable intelligence — executive summary, "
     "action items, decisions and instant Q&A over the transcript."
 )
-DEFAULT_API_URL = "http://localhost:8000"   # <- point this at your backend
+DEFAULT_API_URL = "https://meeting-insights-ai-17cc3.containers.snapdeploy.app/"   # <- point this at your backend
 UPLOAD_DIR = Path("uploads")
 
 # --- Auto-ping behaviour -------------------------------------------------
