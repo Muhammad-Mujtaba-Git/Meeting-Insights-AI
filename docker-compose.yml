@@ -1,6 +1,21 @@
-version: "3.9"
-
 services:
+
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: mi_postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: meeting_insights
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d meeting_insights"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   backend:
     build:
@@ -13,16 +28,18 @@ services:
       - .env
     environment:
       - GROQ_API_KEY=${GROQ_API_KEY}
+    depends_on:
+      db:
+        condition: service_healthy
     volumes:
       - ./uploads:/app/uploads
       - vector_db_data:/app/vector_db
 
- 
   frontend:
     build:
       context: .
       dockerfile: Dockerfile.frontend
-    image: muhammadmujtabaai/meeting-insight-ai-backend:latest
+    image: muhammadmujtabaai/meeting-insight-ai-frontend:latest
     ports:
       - "8501:8501"
     environment:
@@ -32,3 +49,4 @@ services:
 
 volumes:
   vector_db_data:
+  postgres_data:

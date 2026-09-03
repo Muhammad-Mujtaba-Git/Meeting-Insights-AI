@@ -15,13 +15,20 @@ langchain-community>=0.2.0
 langchain-experimental
 
 # RAG & Vector Database (ChromaDB + HuggingFace)
-chromadb>=0.5.0
 langchain-chroma
 langchain-huggingface>=0.0.3
 huggingface-hub>=0.23.0
 
 
 
+
 # Export (PDF Generation)
 reportlab>=4.2.0
 groq
+
+langchain-postgres
+sqlalchemy
+
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch
+sentence-transformers

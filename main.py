@@ -13,6 +13,7 @@ from core.extractor import TranscriptPointsExtract
 from core.vector_store import VectorStore
 from core.rag_engine import RAGEngine
 from datetime import datetime
+
 logging.basicConfig(level=logging.INFO)
 
 app = FastAPI(title="Meeting Insights AI API")
@@ -24,7 +25,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# Initialize tools once
+
 audio_processor = AudioProcessor()
 transcriber = AudioTranscriber()
 summarizer = TranscriptSummarizer()
@@ -33,10 +34,6 @@ extractor = TranscriptPointsExtract()
 
 @app.get("/health", summary="Health check", tags=["System"])
 def health_check():
-    """
-    Lightweight health probe for uptime monitors and the Streamlit UI.
-    Returns 200 OK as long as the FastAPI process is alive.
-    """
     return {
         "status": "ok",
         "service": "meeting-insights-ai",
@@ -48,12 +45,10 @@ def process_meeting(request: ProcessRequest):
     try:
         logging.info(f"Processing audio: {request.source}")
 
-        # 1. Download / split audio
         chunk_paths = audio_processor.process_input(request.source)
         if not chunk_paths:
             raise ValueError("Failed to download or process audio.")
 
-        # 2. Transcribe
         transcript_parts = []
         for chunk in chunk_paths:
             transcript_parts.append(transcriber.transcribe_chunks(chunk))
@@ -64,15 +59,13 @@ def process_meeting(request: ProcessRequest):
         if not full_transcript:
             raise ValueError("Transcription resulted in empty text.")
 
-        # 3. Summarize & Extract
         summary = summarizer.summarize(full_transcript)
         title = summarizer.make_title(summary)
         action_items = extractor.extract_action_items(full_transcript)
         key_decisions = extractor.extract_key_decisions(full_transcript)
         questions = extractor.extract_questions(full_transcript)
 
-        # 4. Save to Vector Store for Q&A
-        VectorStore().build_vector_store(full_transcript)
+        VectorStore().build_vector_store(transcript=full_transcript, meeting_id="default_meeting")
 
         return {
             "title": title,
@@ -82,21 +75,17 @@ def process_meeting(request: ProcessRequest):
             "questions": questions,
         }
 
-    except Exception as e:
-        logging.error(f"Processing failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    except Exception:
+        logging.exception("Processing failed")
+        raise
 
 
 @app.post("/ask", summary="Ask a question about the meeting")
 def ask_question(request: QueryRequest):
-    if not os.path.exists("vector_db"):
-        raise HTTPException(status_code=400, detail="No meeting processed yet. Run /process first.")
-
     try:
-        chain = RAGEngine().build_rag_chain()
+        chain = RAGEngine(meeting_id="default_meeting").build_rag_chain()
         raw_answer = str(chain.invoke(request.question))
 
-        # 1-line clean up for any <think> tags from reasoning models
         clean_answer = re.sub(r"<think>.*?</think>", "", raw_answer, flags=re.DOTALL).strip()
 
         return {

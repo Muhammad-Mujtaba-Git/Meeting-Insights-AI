@@ -1,6 +1,7 @@
 from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
+from config import settings
 
 
 from prompts.prompts import (
@@ -16,7 +17,7 @@ class TranscriptPointsExtract:
         """
         Initializes the LLM.
         """
-        self.llm = ChatGroq(model=model, temperature=temperature)
+        self.llm = ChatGroq(model=model, temperature=temperature, api_key=settings.GROQ_API_KEY)
 
     def _build_chain(self, system_prompt: str):
         """

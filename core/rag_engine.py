@@ -9,13 +9,15 @@ from prompts.prompts import rag_chain_prompt
 
 
 class RAGEngine:
-    def __init__(self):
+    def __init__(self,meeting_id: str = "default_meeting"):
+
+        self.meeting_id = meeting_id 
         self.llm = ChatGroq(model="qwen/qwen3.6-27b", temperature=0.3,api_key=settings.GROQ_API_KEY)
         
         
         self.vs = VectorStore() 
         vectorstore = self.vs.load_vector_store()
-        self.retriever = self.vs.get_production_retriever(vectorstore)
+        self.retriever = self.vs.get_production_retriever(vectorstore,self.meeting_id)
 
     
     def format_doc(self, docs):

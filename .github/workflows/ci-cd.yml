@@ -1,24 +1,52 @@
-name: Docker CI Pipeline
+services:
 
-on:
-  push:
-    branches:
-      - main
-      - fixing-for-deploy
-  pull_request:
-    branches:
-      - main
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: mi_postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: meeting_insights
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d meeting_insights"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
-jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    image: muhammadmujtabaai/meeting-insight-ai-backend:latest
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./uploads:/app/uploads
+      - vector_db_data:/app/vector_db
 
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    image: muhammadmujtabaai/meeting-insight-ai-frontend:latest
+    ports:
+      - "8501:8501"
+    environment:
+      - API_BASE_URL=http://backend:8000
+    depends_on:
+      - backend
 
-      - name: Build Backend Image
-        run: docker build -t mi-backend-test -f Dockerfile.backend .
-
-      - name: Build Frontend Image
-        run: docker build -t mi-frontend-test -f Dockerfile.frontend .
+volumes:
+  vector_db_data:
+  postgres_data:
